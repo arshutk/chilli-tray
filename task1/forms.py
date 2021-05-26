@@ -1,10 +1,10 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from django.core.exceptions import ValidationError
+
+from task1.models import Task
 
 
-from task1.models import CustomUser
+from task1.models import CustomUser, Task
 
 
 class RegistrationForm(UserCreationForm):
@@ -21,3 +21,9 @@ class LoginForm(forms.Form):
 
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        exclude = ('user',) # excluded the user field to show up in the form, will add the value later inside view using request.user
