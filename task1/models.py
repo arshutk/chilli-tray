@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 
 class UserManager(BaseUserManager):
     def create_user(self, username, password=None):
@@ -34,7 +34,7 @@ class UserManager(BaseUserManager):
         return user
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    '''Custom User models extending AbstractBaseUser class'''
+    '''Custom User models extending AbstractBaseUser class, an auto incrementing uid is automatically attached to this model by Django'''
 
     username = models.CharField(max_length=256, unique=True ,validators=[RegexValidator(regex='^[aA].*[01]$', 
                                 message='username must start with a/A and ends with 0/1')])
@@ -54,4 +54,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     class Meta():
         verbose_name = "User"
+
+
+class Task(models.Model):
+    ''' Task model having a foreign key of user '''
+    user = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='tasks')
+    task_title = models.CharField(max_length=200, validators=[MinLengthValidator(limit_value=10)])
+    task_description = models.CharField(max_length=2000, blank=True)
+    task_pic = models.FileField(null=True, blank=True, upload_to='tasks/')
+    create_time_stamps = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} | {self.task_title}'
+
+
 
