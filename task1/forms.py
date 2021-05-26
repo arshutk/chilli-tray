@@ -22,6 +22,13 @@ class LoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
+    def clean_username(self):
+        username = CustomUser.objects.filter(username=self.cleaned_data.get('username'))
+        if username.exists():
+            return self.cleaned_data['username']
+        raise forms.ValidationError('user not found')
+
+
 
 class TaskForm(forms.ModelForm):
     class Meta:

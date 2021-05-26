@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     '''Custom User models extending AbstractBaseUser class, an auto incrementing uid is automatically attached to this model by Django'''
 
-    username = models.CharField(max_length=256, unique=True ,validators=[RegexValidator(regex='^[aA].*[01]$', 
+    username = models.CharField(max_length=256, unique=True ,validators=[RegexValidator(regex='^[aA][.^\S]*[01]$', 
                                 message='username must start with a/A and ends with 0/1')])
     join_date = models.DateTimeField(auto_now_add=True)
 
@@ -47,7 +47,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
-    object = UserManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.username
@@ -67,5 +67,5 @@ class Task(models.Model):
     def __str__(self):
         return f'{self.user.username} | {self.task_title}'
 
-
-
+    class Meta:
+        ordering = ('-create_time_stamps',)

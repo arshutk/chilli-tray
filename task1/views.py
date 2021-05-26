@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import EmptyPage, Paginator
 
 from task1.forms import RegistrationForm, LoginForm, TaskForm
 from task1.models import Task
@@ -79,9 +80,18 @@ def logout_view(request):
 @(login_required)
 def home_view(request):
     ''' This view will display all the tasks created by a user'''
-    
-    tasks = Task.objects.filter(user = request.user)
-    return render(request, 'home.html', context={})
+
+    page_num = request.GET.get('page', 1)   
+
+    query = Task.objects.filter(user = request.user)
+    tasks = Paginator(query, 5)
+
+    try:
+        paginated_tasks = tasks.page(page_num)
+    except EmptyPage:
+        paginated_tasks = tasks.page(1)
+    print(paginated_tasks)
+    return render(request, 'home.html', context={'tasks': paginated_tasks})
 
 
 

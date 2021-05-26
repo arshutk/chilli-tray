@@ -15,6 +15,8 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ('task_title', 'user',)
     search_fields = ('task_title',)
     list_filter = ('user',)
+    readonly_fields = ('create_time_stamps',)
+
 
 
 
