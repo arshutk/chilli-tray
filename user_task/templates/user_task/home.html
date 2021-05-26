@@ -1,0 +1,41 @@
+{% extends 'user_task/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <h1 class="h2 text-center">Tasks</h1>
+        <table class="table table-bordered border-primary">    
+            <thead>
+                <tr>
+                    <th scope="col">S. No.</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </thead>
+            {% for task in tasks %}
+            
+            <tbody>
+                <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{task.task_title}}</td>
+                <td>{{task.task_description}}</td>
+                <td>{{task.create_time_stamps}}</td>
+                </tr>
+            </tbody>
+        
+            {% endfor %}
+        </table>
+        </ul> 
+    </div>
+    <div class="container text-center">
+        {% if tasks.has_previous %}
+        <button type="button" class="btn btn-primary"><a href='{%url 'home'%}?page={{tasks.previous_page_number}}' class="page-link">Previous</a></button>
+        {% endif %}
+        {% if tasks.has_next %}
+        <button type="button" class="btn btn-primary"><a href='{%url 'home'%}?page={{tasks.next_page_number}}' class="page-link">Next</a></button>
+        {% endif %}
+   </div>
+
+{% endblock content %}
+

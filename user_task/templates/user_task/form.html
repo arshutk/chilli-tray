@@ -1,0 +1,69 @@
+{% extends 'user_task/base.html' %}
+
+{% block content %}
+    <div class="container">    
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+            <p id="form-heading" class="h2 text-center">{{title}}</p>
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.username.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{form.username.errors}}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+                </div>
+
+                {% if title == 'Login' %}
+                
+                    {% if form.password1.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{form.password1.errors}}
+                    </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
+                    </div>
+
+                {% else %}
+
+                    {% if form.password1.errors or form.password2.errors%}
+                    <div class="alert alert-danger" role="alert">
+                        {{form.password1.errors}}
+                        {{form.password2.errors}}
+                    </div>
+                    {% endif %}
+            
+                    <div class="form-group">
+                        <label for="password1">Password</label>
+                        <input type="password" class="form-control" id="password1" name="password1" placeholder="Password" required />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password2">Confirm Password</label>
+                        <input type="password" class="form-control" id="password2" name="password2" placeholder="Password" required />
+                    </div>
+
+                {% endif %}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" style="margin-Bottom: 2rem">Submit</button>
+                    {% if title == 'Login' %}
+                    <p>
+                        Not a member? <a href={% url 'register' %}>Register</a>
+                    </p>
+                    {% else %}
+                    <p>
+                        Need to Sign In? <a href={% url 'login' %}>Login</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </form>
+                
+         </div> 
+    </div>
+
+{% endblock content %}

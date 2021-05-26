@@ -1,0 +1,7 @@
+ul > li > a > span { color: #fff !important; font-size: 1.6rem;}
+
+.nav > li > a:hover, .nav > li > a:focus {background-color: #3071a9; }
+
+#form-heading { font-weight: 600;}
+
+a.page-link{color: white; text-decoration: none; }

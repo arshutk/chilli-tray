@@ -1,21 +1,21 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, Paginator
 
-from task1.forms import RegistrationForm, LoginForm, TaskForm
-from task1.models import Task
+from user_task.forms import RegistrationForm, LoginForm, TaskForm
+from user_task.models import Task
 
 
 
 def registration_view(request):
     ''' Registration View : handles the registration form submission and applies the model level validations '''
 
-    context = {}
+    context = {'title': 'Signup'}
     # POST request
     if request.POST:
         form = RegistrationForm(request.POST)
-
         if form.is_valid():
             form.save()
             # redirecting user to home page on successfull signup
@@ -32,14 +32,14 @@ def registration_view(request):
         form = RegistrationForm()
         context['form'] = form
         
-    return render(request, 'registration.html', context)
+    return render(request, 'user_task/form.html', context)
 
 
 def login_view(request):
     ''' Login View : Handles the login of user and on successfull login redirect them to home page'''
 
     user = request.user
-    context = {}
+    context = {'title': 'Login'}
 
     if user.is_authenticated:
         # redirecting user to home page if already authenticated
@@ -48,7 +48,6 @@ def login_view(request):
     # POST request
     elif request.POST:
         form = LoginForm(request.POST)
-        
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -65,10 +64,10 @@ def login_view(request):
         form = LoginForm()
         context['form'] = form
 
-    return render(request, 'login.html', context)
+    return render(request, 'user_task/form.html', context)
 
 
-@(login_required)
+@(login_required(login_url='login'))
 def logout_view(request):
     '''Logout View : Handles the logging out of the user'''
 
@@ -77,7 +76,7 @@ def logout_view(request):
 
 
 
-@(login_required)
+@(login_required(login_url='login'))
 def home_view(request):
     ''' This view will display all the tasks created by a user'''
 
@@ -90,25 +89,23 @@ def home_view(request):
         paginated_tasks = tasks.page(page_num)
     except EmptyPage:
         paginated_tasks = tasks.page(1)
-    print(paginated_tasks)
-    return render(request, 'home.html', context={'tasks': paginated_tasks})
+
+    return render(request, 'user_task/home.html', context={'tasks': paginated_tasks})
 
 
-
-@(login_required)
+@(login_required(login_url='login'))
 def task_create_view(request):
     ''' View for authenticated users to create tasks'''
 
     context = {}
-    user = request.user
-
+    print(request.POST)
     # POST request
     if request.POST:
-        form = TaskForm(request.POST)
+        form = TaskForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save(commit=False)
-            form.user = request.user                
-            form.save
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
             return redirect('home')
         else:
             context['form'] = form
@@ -118,5 +115,5 @@ def task_create_view(request):
         form = TaskForm()
         context['form'] = form
     
-    return render(request, 'task_create.html', context)
+    return render(request, 'user_task/task_create.html', context)
 

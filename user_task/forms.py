@@ -1,10 +1,11 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from task1.models import Task
+
+from user_task.models import Task
 
 
-from task1.models import CustomUser, Task
+from user_task.models import CustomUser, Task
 
 
 class RegistrationForm(UserCreationForm):
@@ -31,6 +32,9 @@ class LoginForm(forms.Form):
 
 
 class TaskForm(forms.ModelForm):
+
     class Meta:
         model = Task
         exclude = ('user',) # excluded the user field to show up in the form, will add the value later inside view using request.user
+    
+    

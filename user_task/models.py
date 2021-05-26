@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.core.validators import RegexValidator, MinLengthValidator
+from django.core.validators import RegexValidator, MinLengthValidator, FileExtensionValidator
+import uuid, os
 
 class UserManager(BaseUserManager):
     def create_user(self, username, password=None):
@@ -15,16 +16,15 @@ class UserManager(BaseUserManager):
             username = username,
         )
 
-        user.is_active = True
-
         user.set_password(password)
         user.save(using=self._db)
+        
         return user
 
     def create_superuser(self, username, password):
         user = self.create_user(
             username,
-            password=password,
+            password=password
         )
 
         user.is_staff = True
@@ -40,7 +40,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                                 message='username must start with a/A and ends with 0/1')])
     join_date = models.DateTimeField(auto_now_add=True)
 
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
@@ -55,13 +55,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta():
         verbose_name = "User"
 
+def task_upload_location(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f'{uuid.uuid4()}.{ext}'
+    return os.path.join('tasks', filename)
+
 
 class Task(models.Model):
     ''' Task model having a foreign key of user '''
     user = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='tasks')
     task_title = models.CharField(max_length=200, validators=[MinLengthValidator(limit_value=10)])
     task_description = models.CharField(max_length=2000, blank=True)
-    task_pic = models.FileField(null=True, blank=True, upload_to='tasks/')
+    task_pic = models.FileField(null=True, blank=True, upload_to=task_upload_location)
     create_time_stamps = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

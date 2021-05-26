@@ -1,0 +1,48 @@
+{% extends 'user_task/base.html' %} 
+
+{% block content %}
+    <div class="container">    
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+            <p id="form-heading" class="h2 text-center">{{title}}</p>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.task_title.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{form.task_title.errors}}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="task_title" placeholder="Enter task title" required>
+                </div>
+                
+                {% if form.task_description.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{form.task_description.errors}}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="task_description" placeholder="Enter task description">
+                </div>
+
+                {% if form.task_description.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{form.task_pic.errors}}
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <label class="form-label" for="customFile">Task Picture</label>
+                    <input type="file" name="task_pic" class="form-control" placeholder="Enter task picture" id="customFile"/>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" style="margin-Bottom: 2rem">Submit</button>
+                </div>
+            </form>
+                
+         </div> 
+    </div>
+
+{% endblock content %} 

@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'task1',
+    'user_task',
 ]
 
 MIDDLEWARE = [
@@ -133,4 +133,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'uploads/'
 MEDIA_URL = '/uploads/'
 
-AUTH_USER_MODEL = 'task1.CustomUser'
+AUTH_USER_MODEL = 'user_task.CustomUser'
