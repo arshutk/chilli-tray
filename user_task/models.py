@@ -63,6 +63,7 @@ def task_upload_location(instance, filename):
 
 class Task(models.Model):
     ''' Task model having a foreign key of user '''
+    
     user = models.ForeignKey('CustomUser', on_delete=models.CASCADE, related_name='tasks')
     task_title = models.CharField(max_length=200, validators=[MinLengthValidator(limit_value=10)])
     task_description = models.CharField(max_length=2000, blank=True)

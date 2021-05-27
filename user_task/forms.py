@@ -32,7 +32,7 @@ class LoginForm(forms.Form):
 
 
 class TaskForm(forms.ModelForm):
-
+    ''' Form for handling the Task model data'''
     class Meta:
         model = Task
         exclude = ('user',) # excluded the user field to show up in the form, will add the value later inside view using request.user
