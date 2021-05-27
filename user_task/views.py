@@ -13,6 +13,12 @@ def registration_view(request):
     ''' Registration View : handles the registration form submission and applies the model level validations '''
 
     context = {'title': 'Signup'}
+
+    if request.user.is_authenticated:
+        # redirecting user to home page if already authenticated
+        return redirect('home')
+
+
     # POST request
     if request.POST:
         form = RegistrationForm(request.POST)

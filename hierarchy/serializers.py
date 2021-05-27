@@ -4,7 +4,7 @@ from hierarchy.models import AppModel
 
 
 class AppModelSerializer(serializers.ModelSerializer):
-    ''' Serializer for the AppModel, here we have overridden to_representation method to display the nested realtions'''    
+    ''' Serializer for the AppModel, here we have used get_parent method defined on parent field to display the nested realtions'''    
     
     parent = serializers.SerializerMethodField()
 
